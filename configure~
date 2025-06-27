@@ -774,8 +774,6 @@ am__isrc
 INSTALL_DATA
 INSTALL_SCRIPT
 INSTALL_PROGRAM
-IS_HAIKU_FALSE
-IS_HAIKU_TRUE
 target_os
 target_vendor
 target_cpu
@@ -3131,22 +3129,6 @@ test -n "$target_alias" &&
 
 CFLAGS=${SAVE_CFLAGS}
 CXXFLAGS=${SAVE_CXXFLAGS}
-
-# Haiku OS detection
-if echo "$host_os" | grep -qi haiku
-then :
-  is_haiku=yes
-else $as_nop
-  is_haiku=no
-fi
- if test "$is_haiku" = "yes"; then
-  IS_HAIKU_TRUE=
-  IS_HAIKU_FALSE='#'
-else
-  IS_HAIKU_TRUE='#'
-  IS_HAIKU_FALSE=
-fi
-
 
 am__api_version='1.16'
 
@@ -16279,10 +16261,7 @@ See \`config.log' for more details" "$LINENO" 5; } ;; #(
     ac_c_undeclared_builtin_options=$ac_cv_c_undeclared_builtin_options ;;
 esac
 
-if test "$is_haiku" = "no"
-then :
-
-  ac_fn_check_decl "$LINENO" "SHM_HUGETLB" "ac_cv_have_decl_SHM_HUGETLB" "
+ac_fn_check_decl "$LINENO" "SHM_HUGETLB" "ac_cv_have_decl_SHM_HUGETLB" "
 #include <sys/shm.h>
 
 
@@ -16306,8 +16285,6 @@ printf "%s\n" "#define HUGETLB_USE_PROC_MEMINFO 1" >>confdefs.h
 fi
 
 
-fi
-
 # Check if we should enable Linux AIO support
 # Check whether --enable-aio was given.
 if test ${enable_aio+y}
@@ -16318,11 +16295,6 @@ else $as_nop
 
 fi
 
-
-# Explicitly disable AIO on Haiku as it's Linux-specific
-if test "$is_haiku" = "yes"; then
-  enable_aio=no
-fi
 
 ac_fn_check_decl "$LINENO" "O_SYNC" "ac_cv_have_decl_O_SYNC" "
 #include <fcntl.h>
@@ -16703,7 +16675,10 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for sqrt in -lm" >&5
+if test "$is_haiku" = "no"
+then :
+
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for sqrt in -lm" >&5
 printf %s "checking for sqrt in -lm... " >&6; }
 if test ${ac_cv_lib_m_sqrt+y}
 then :
@@ -16746,6 +16721,8 @@ then :
 
 fi
 
+
+fi
 
 
 
@@ -18117,18 +18094,7 @@ printf "%s\n" "#define STRERROR_R_CHAR_P 1" >>confdefs.h
 fi
 
 
-if test "$is_haiku" = "yes"
-then :
-  ac_fn_c_check_func "$LINENO" "clock_gettime" "ac_cv_func_clock_gettime"
-if test "x$ac_cv_func_clock_gettime" = xyes
-then :
-
-else $as_nop
-  as_fn_error $? "clock_gettime not found in default libs on Haiku" "$LINENO" 5
-fi
-
-else $as_nop
-  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for library containing clock_gettime" >&5
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for library containing clock_gettime" >&5
 printf %s "checking for library containing clock_gettime... " >&6; }
 if test ${ac_cv_search_clock_gettime+y}
 then :
@@ -18187,8 +18153,6 @@ then :
 
 fi
 
-
-fi
 
 save_CFLAGS="$CFLAGS"
 CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
@@ -18506,8 +18470,9 @@ printf "%s\n" "#define SB_GIT_SHA \"$SB_GIT_SHA\"" >>confdefs.h
 ac_config_files="$ac_config_files Makefile third_party/luajit/Makefile third_party/concurrency_kit/Makefile src/Makefile src/drivers/Makefile src/drivers/mysql/Makefile src/drivers/pgsql/Makefile src/tests/Makefile src/tests/cpu/Makefile src/tests/fileio/Makefile src/tests/memory/Makefile src/tests/threads/Makefile src/tests/mutex/Makefile src/lua/Makefile src/lua/internal/Makefile tests/Makefile tests/include/config.sh snap/snapcraft.yaml"
 
 
-# Explicitly add -lm to LIBS for Haiku or generally
-LIBS="$LIBS -lm"
+if test "$is_haiku" = "yes"; then
+  LIBS="$LIBS -lroot"
+fi
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -18618,10 +18583,6 @@ LIBOBJS=$ac_libobjs
 LTLIBOBJS=$ac_ltlibobjs
 
 
-if test -z "${IS_HAIKU_TRUE}" && test -z "${IS_HAIKU_FALSE}"; then
-  as_fn_error $? "conditional \"IS_HAIKU\" was never defined.
-Usually this means the macro was only invoked conditionally." "$LINENO" 5
-fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking that generated files are newer than configure" >&5
 printf %s "checking that generated files are newer than configure... " >&6; }
    if test -n "$am_sleep_pid"; then
