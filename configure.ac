@@ -186,7 +186,9 @@ AC_CHECK_DECLS(O_SYNC, ,
 
 ACX_PTHREAD
 
-AC_CHECK_LIB(m, sqrt)
+AS_IF([test "$is_haiku" = "no"], [
+  AC_CHECK_LIB(m, sqrt)
+])
 
 SB_CHECK_MYSQL
 
@@ -412,6 +414,11 @@ tests/Makefile
 tests/include/config.sh
 snap/snapcraft.yaml
 ])
+
+if test "$is_haiku" = "yes"; then
+  LIBS="$LIBS -lroot"
+fi
+
 AC_OUTPUT
 
 AC_MSG_RESULT([===============================================================================])

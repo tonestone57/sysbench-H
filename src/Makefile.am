@@ -45,7 +45,7 @@ sysbench_LDADD = tests/fileio/libsbfileio.a tests/threads/libsbthreads.a \
     tests/memory/libsbmemory.a tests/cpu/libsbcpu.a \
     tests/mutex/libsbmutex.a \
     $(mysql_ldadd) $(pgsql_ldadd) \
-    $(LUAJIT_LIBS) $(CK_LIBS)
+    $(LUAJIT_LIBS) $(CK_LIBS) $(LIBS)
 
 sysbench_LDFLAGS = $(mysql_ldflags) \
     $(pgsql_ldflags) $(LUAJIT_LDFLAGS)
